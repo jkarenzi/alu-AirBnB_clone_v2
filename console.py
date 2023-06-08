@@ -119,19 +119,17 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         # convert the args to a list
-        args = args.split()
+        args_list = args.split()
 
         # the 1st element of the list is the class name
-        class_name = args[0]
-        print(class_name)
+        class_name = args_list[0]
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
         new_instance = self.classes[class_name]()
         for params in args[1:]:
-            if "=" not in params:
-                continue
-            key, value = params.split('=')
+            key_val = params.split('=')
+            key, value = key_val
             value = value.replace('_', ' ')
             if value.startswith('"') and value.endswith('"'):
                 value = value[1:-1].replace('\\"', '"')
