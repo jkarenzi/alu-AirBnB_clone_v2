@@ -112,57 +112,47 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
-
+    
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        if len(args) < 1:
             print("** class name missing **")
             return
-          # Split the arguments into class name and parameters
-        args_list = args.split()
-        class_name = args_list[0]
-        params = args_list[1:] 
+        # convert the args to a list
+        args = args.split()
 
-        if args not in HBNBCommand.classes:
+        # the 1st element of the list is the class name
+        class_name = args[0]
+        print(class_name)
+        if class_name not in self.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[class_name]()
-
-         # Parse and set the parameters for the instance
-        for param in params:
-            # Split each parameter into key-value pair
-            key_val = param.split('=')
-            if len(key_val) != 2:
-                print(f"Invalid parameter: {param}")
-                return
-            key, value = key_val
+        new_instance = self.classes[class_name]()
+        for params in args[1:]:
+            if "=" not in params:
+                continue
+            key, value = params.split('=')
             value = value.replace('_', ' ')
-
-            # Perform necessary type casting for different value types
             if value.startswith('"') and value.endswith('"'):
-                # String value
                 value = value[1:-1].replace('\\"', '"')
             elif '.' in value:
-                # Float value
                 try:
                     value = float(value)
                 except ValueError:
                     continue
             else:
-                # Integer value
                 try:
                     value = int(value)
                 except ValueError:
                     continue
+
             if value is not None and value != "" and hasattr(
                     new_instance, key):
-            # Set the attribute on the instance
                 setattr(new_instance, key, value)
 
-        # Save the instance
         print(new_instance.id)
         new_instance.save()
-        
+    
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
