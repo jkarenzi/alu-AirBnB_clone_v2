@@ -128,6 +128,8 @@ class HBNBCommand(cmd.Cmd):
             return
         new_instance = self.classes[class_name]()
         for params in args[1:]:
+            if "=" not in params:
+                continue
             key_val = params.split('=')
             key, value = key_val
             value = value.replace('_', ' ')
