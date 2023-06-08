@@ -136,11 +136,12 @@ class HBNBCommand(cmd.Cmd):
                 print(f"Invalid parameter: {param}")
                 return
             key, value = key_val
+            value = value.replace('_', ' ')
 
             # Perform necessary type casting for different value types
             if value.startswith('"') and value.endswith('"'):
                 # String value
-                value = value[1:-1].replace('_', ' ')
+                value = value[1:-1].replace('\\"', '"')
             elif '.' in value:
                 # Float value
                 try:
