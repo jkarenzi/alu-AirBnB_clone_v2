@@ -119,14 +119,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
           # Split the arguments into class name and parameters
-        args_list = args.split(' ')
+        args_list = args.split()
         class_name = args_list[0]
         params = args_list[1:] 
 
         if args not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[class_name]()
 
          # Parse and set the parameters for the instance
         for param in params:
@@ -147,16 +147,14 @@ class HBNBCommand(cmd.Cmd):
                 try:
                     value = float(value)
                 except ValueError:
-                    print(f"Invalid float value: {value}")
-                    return
+                    continue
             else:
                 # Integer value
                 try:
                     value = int(value)
                 except ValueError:
-                    print(f"Invalid integer value: {value}")
-                    return
-
+                    continue
+            
             # Set the attribute on the instance
             setattr(new_instance, key, value)
 
