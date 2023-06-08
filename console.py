@@ -154,9 +154,10 @@ class HBNBCommand(cmd.Cmd):
                     value = int(value)
                 except ValueError:
                     continue
-            
+            if value is not None and value != "" and hasattr(
+                    new_instance, key):
             # Set the attribute on the instance
-            setattr(new_instance, key, value)
+                setattr(new_instance, key, value)
 
         # Save the instance
         print(new_instance.id)
