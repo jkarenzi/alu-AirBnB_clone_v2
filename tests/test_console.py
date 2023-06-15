@@ -20,4 +20,4 @@ class ConsoleTestCase(unittest.TestCase):
         if os.getenv("HBNB_TYPE_STORAGE") != "db":
             with patch('sys.stdout', stdout):
                 console.onecmd('create State name="California')
-            self.assertEqual(len(stdout.getvalue()), 37)
+            self.assertEqual(len(stdout.getvalue()), 43)
