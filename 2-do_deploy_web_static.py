@@ -1,33 +1,65 @@
 #!/usr/bin/python3
-"""Fabric script that distributes an archive to your web servers"""
-from fabric.api import env, put, run
-from os.path import exists
+"""Comment"""
+from fabric.api import *
+import os
+import re
+from datetime import datetime
 
+env.user = 'ubuntu'
 env.hosts = ["54.196.148.110", "54.82.71.184"]
-env.user = "ubuntu"
 env.key = "/etc/ssh/school"
 
-
 def do_deploy(archive_path):
-    """Function to distribute an archive to your web servers"""
-    if not exists(archive_path):
-        return False
-    try:
-        file_name = archive_path.split("/")[-1]
-        name = file_name.split(".")[0]
-        path_name = "/data/web_static/releases/" + name
-        put(archive_path, "/tmp/")
-        run("mkdir -p {}/".format(path_name))
-        run('tar -xzf /tmp/{} -C {}/'.format(file_name, path_name))
-        run("rm /tmp/{}".format(file_name))
-        run("mv {}/web_static/* {}".format(path_name, path_name))
-        run("rm -rf {}/web_static".format(path_name))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}/ /data/web_static/current'.format(path_name))
-        return True
-    except Exception:
+    """Comment"""
+    if not os.path.isfile(archive_path):
         return False
 
-# Run the script like this:
-# $ fab -f 2-do_deploy_web_static.py
-# do_deploy:archive_path=versions/file_name.tgz
+    filename_regex = re.compile(r'[^/]+(?=\.tgz$)')
+    match = filename_regex.search(archive_path)
+
+    # Upload the archive to the /tmp/ directory of the web server
+    archive_filename = match.group(0)
+    result = put(archive_path, "/tmp/{}.tgz".format(archive_filename))
+    if result.failed:
+        return False
+    # Uncompress the archive to the folder
+    #     /data/web_static/releases/<archive filename without extension> on
+    #     the web server
+
+    result = run(
+        "mkdir -p /data/web_static/releases/{}/".format(archive_filename))
+    if result.failed:
+        return False
+    result = run("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/"
+                 .format(archive_filename, archive_filename))
+    if result.failed:
+        return False
+
+    # Delete the archive from the web server
+    result = run("rm /tmp/{}.tgz".format(archive_filename))
+    if result.failed:
+        return False
+    result = run("mv /data/web_static/releases/{}"
+                 "/web_static/* /data/web_static/releases/{}/"
+                 .format(archive_filename, archive_filename))
+    if result.failed:
+        return False
+    result = run("rm -rf /data/web_static/releases/{}/web_static"
+                 .format(archive_filename))
+    if result.failed:
+        return False
+
+    # Delete the symbolic link /data/web_static/current from the web server
+    result = run("rm -rf /data/web_static/current")
+    if result.failed:
+        return False
+
+    #  Create a new the symbolic link
+    #  /data/web_static/current on the web server,
+    #     linked to the new version of your code
+    #     (/data/web_static/releases/<archive filename without extension>)
+    result = run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+                 .format(archive_filename))
+    if result.failed:
+        return False
+    return True
