@@ -8,7 +8,7 @@ from os.path import exists
 
 env.hosts = ["54.196.148.110", "54.82.71.184"]
 env.user = "ubuntu"
-env.key = "~/school"
+env.key = "/etc/ssh/school"
 
 
 def do_pack():
