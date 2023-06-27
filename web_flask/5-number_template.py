@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """flask web application"""
 
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -44,6 +44,23 @@ def python(text='is cool'):
     # Replace underscores with spaces
     text = text.replace('_', ' ')
     return 'Python {}'.format(text)
+
+
+@app.route('/number/<int:n>', strict_slashes=False)
+def number(n):
+    """
+    Display '<n> is a number' only if n is an integer
+    """
+    return '{} is a number'.format(n)
+
+
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def number_template(n):
+    """
+    Display an HTML page with the number n inside an H1 tag in the body
+    """
+    if isinstance(n, int):
+        return render_template('number_template.html', number=n)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
