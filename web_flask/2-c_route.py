@@ -1,36 +1,31 @@
 #!/usr/bin/python3
-"""flask web application"""
+"""Start a Flask web application.
+The application listens on 0.0.0.0, port 5000
+"""
 
-from flask import Flask, render_template
+from flask import Flask
 
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello():
-    """
-    Display 'Hello HBNB!'
-    """
+def hello_hbnb():
+    """Display a message"""
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """
-    Display 'HBNB'
-    """
+    """Display a HBNB"""
     return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
 def c(text):
-    """
-    Display 'C ' followed by the value of the text variable
-    (replace underscore _ symbols with a space)
-    """
-    # Replace underscores with spaces
+    """Display C followed by the value of the text variable"""
     text = text.replace('_', ' ')
     return 'C {}'.format(text)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
