@@ -1,7 +1,14 @@
 #!/usr/bin/python3
 """Start a Flask web application.
+The application listens on 0.0.0.0, port 5000.
+Routes:
+    - /: Displays 'Hello HBNB!'
+    - /hbnb: Displays 'HBNB'
+    - /c/<text>: Displays 'C' followed by the value of the text variable
+    - /python/(<text>): Displays 'Python' followed by the value of the text
+    - /number/<n>: Displays 'n is a number' only if n is an integer
+    - /number_template/<n>: Displays a HTML page only if n is an integer
 """
-
 from flask import Flask, render_template
 
 app = Flask(__name__)

@@ -3,9 +3,9 @@
 import os
 from fabric.api import *
 
-env.hosts = ["54.196.148.110", "54.82.71.184"]
+env.hosts = ["54.226.54.247", "18.205.246.150"]
 env.user = "ubuntu"
-env.key = "~/school"
+env.key = "~/.ssh/id_rsa"
 
 
 def do_clean(number=0):
